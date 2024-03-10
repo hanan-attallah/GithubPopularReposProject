@@ -1,0 +1,11 @@
+*.classpath
+*.gradle/
+*.project
+*.settings/
+bin/*
+.idea/*
+.metadata/
+build/*
+*.iml
+out/
+.vscode/settings.json
