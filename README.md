@@ -1,4 +1,5 @@
 # GithubPopularReposProject
+The idea of this project is to implement a backend application for discovering popular repositories on GitHub.
 
 # Service Specification
 The service should be able to provide:
