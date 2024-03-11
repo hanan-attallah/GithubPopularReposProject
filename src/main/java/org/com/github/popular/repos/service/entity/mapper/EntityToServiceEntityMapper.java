@@ -12,17 +12,19 @@ public class EntityToServiceEntityMapper {
     private static MapperFactory factory = new DefaultMapperFactory.Builder().build();
 
     /**
-     * Maps list of objects to the required class
+     * Maps a list of objects to the required class.
      *
-     * @param dest    The class of the dest
+     * @param <T> The type of objects in the returned list
+     * @param dest The class of the destination type. This class type should match or be a superclass/interface of the type <T>
      * @param objects The list of objects to be mapped
-     * @return A new list of objects of type dest
+     * @return A new list of objects of the specified destination type
      */
-    public static <T> List<T> mapAsList(Class dest, List<T> objects) {
+    public static <T> List<T> mapAsList(Class<T> dest, List<?> objects) {
         if (objects == null) {
             return null;
         }
         MapperFacade mapper = factory.getMapperFacade();
-        return (List<T>) mapper.mapAsList(objects, dest);
+        // Assumes `mapper.mapAsList` is correctly typed to return List<T>
+        return mapper.mapAsList(objects, dest);
     }
 }

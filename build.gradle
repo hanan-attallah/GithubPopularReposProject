@@ -2,11 +2,12 @@ plugins {
     id 'org.springframework.boot' version '2.6.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'checkstyle'
 }
 
 group = 'com.yourdomain'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
@@ -22,8 +23,26 @@ dependencies {
     implementation('ma.glasnost.orika:orika-core:1.5.4')
     implementation('javax.xml.bind:jaxb-api')
     implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
+
 }
 
 test {
     useJUnitPlatform()
+}
+
+apply plugin: 'checkstyle'
+checkstyle {
+    toolVersion = '8.36' // Use the Checkstyle version you prefer
+    config = resources.text.fromFile('config/checkstyle/checkstyle.xml') // Path to your Checkstyle config file
+}
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
 }

@@ -1,12 +1,38 @@
 # GithubPopularReposProject
-The idea of this project is to implement a backend application for discovering popular repositories on GitHub.
 
-# Service Specification
-The service should be able to provide:
-1- A list of the most popular repositories, sorted by number of stars.
-2- An option to be able to view the top 10, 50, 100 repositories should be available.
-3- Given a date, the most popular repositories created from this date onwards should be returned. A filter for the programming language would be a great addition to have.
+## Project Overview
+This project aims to facilitate the discovery of popular GitHub repositories. It leverages GitHub's public search API to fetch repositories based on various criteria, including star count, creation date, and programming language.
 
-# Implementation Details
-GitHub provides a public search endpoint which you can use for fetching the most popular Repositories:
-https://api.github.com/search/repositories?q=created:2019-01-10&sort=stars&order=desc
+## Features
+- **Repository Ranking**: List the most starred repositories.
+- **Flexible Viewing Options**: Ability to view the top 10, 50, or 100 repositories.
+- **Date Filtering**: Fetch repositories created on or after a specified date.
+- **Language Filtering**: Option to filter repositories by programming language.
+
+## Getting Started
+
+### Prerequisites
+- Java 17
+- Maven or Gradle
+- An IDE such as IntelliJ IDEA or Eclipse
+
+### Installation
+1. Clone the repository:
+   ```shell
+   git clone git@github.com:hanan-attallah/GithubPopularReposProject.git
+   cd GithubPopularReposProject
+
+2. For Gradle checkstyle
+   - ./gradlew checkstyleMain
+   - ./gradlew checkstyleTest
+   
+3. For Gradle build and run
+   - gradle build
+   - gradle bootRun
+
+4. Access the application at:
+    http://localhost:8080/v1/github/repositories
+
+### API Documentation 
+- To access your generated API documentation and UI:
+  OpenAPI JSON: http://localhost:8080/v3/api-docs).
