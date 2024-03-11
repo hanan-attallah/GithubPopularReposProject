@@ -22,7 +22,7 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
    git clone git@github.com:hanan-attallah/GithubPopularReposProject.git
    cd GithubPopularReposProject
 
-2. For Gradle checkstyle
+2. For code linting: checkstyle
    - ./gradlew checkstyleMain
    - ./gradlew checkstyleTest
    
@@ -35,4 +35,11 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
 
 ### API Documentation 
 - To access your generated API documentation and UI:
-  OpenAPI JSON: http://localhost:8080/v3/api-docs).
+  OpenAPI JSON using api: http://localhost:8080/v3/api-docs.
+
+### Testing
+- service unit testing 
+- controller unit testing
+- Add GitHub action to check that application is working through health check and unit tests are passing
+- Git hooks - JGit to create pre commit hook, in pre commit: run unit test cases.
+- 

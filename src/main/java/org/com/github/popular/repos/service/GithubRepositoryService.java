@@ -31,9 +31,6 @@ public class GithubRepositoryService {
     private CacheManager cacheManager;
 
     @Autowired
-    private EntityToServiceEntityMapper entityToServiceEntityMapper;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Value("${github.api.url}")
@@ -53,12 +50,12 @@ public class GithubRepositoryService {
         String url = String.format(Constants.BASE_GITHUB_API_URL_PLACEHOLDER, apiUrl, query);
 
         try {
+            // Request the gitHub open API to return the topN repos.
             ResponseEntity<GeneralGithubAPIServiceEntity> responseEntity = restTemplate.getForEntity(url, GeneralGithubAPIServiceEntity.class);
-            if (responseEntity.getBody() != null && responseEntity.getBody().getItems() != null) {
-                return (List<ServiceEntity>) (List<?>) entityToServiceEntityMapper.mapAsList(GithubRepositoryServiceEntity.class,
-                        responseEntity.getBody().getItems().stream()
-                                .limit(topN)
-                                .collect(Collectors.toList()));
+            if (responseEntity.getBody() != null && !responseEntity.getBody().isIncompleteResults() && responseEntity.getBody().getItems() != null) {
+                return responseEntity.getBody().getItems().stream()
+                        .limit(topN)
+                        .collect(Collectors.toList());
             }
         } catch (RestClientException e) {
             log.error("Failed to fetch repositories from GitHub api: {}", kv("error", e.getMessage()));
