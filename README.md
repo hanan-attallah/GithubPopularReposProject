@@ -42,4 +42,3 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
 - controller unit testing
 - Add GitHub action to check that application is working through health check and unit tests are passing
 - Git hooks - JGit to create pre commit hook, in pre commit: run unit test cases.
-- 
