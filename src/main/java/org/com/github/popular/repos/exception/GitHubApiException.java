@@ -1,29 +1,25 @@
 package org.com.github.popular.repos.exception;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
+@Setter
 public class GitHubApiException extends RuntimeException {
-    private static final long serialVersionUID = -6783640101664019782L;
 
-    private ErrorCode code;
+    private HttpStatus httpStatus;
 
-    private Object data;
+    private String errorMessage;
 
-    public GitHubApiException(ErrorCode code, Object data) {
-        super();
-        this.data = data;
-        this.code = code;
-    }
-
-    public GitHubApiException(ErrorCode code, Object data, Exception exception) {
+    public GitHubApiException(HttpStatus httpStatus, String errorMessage, Exception exception) {
         super(exception);
-        this.data = data;
-        this.code = code;
+        this.errorMessage = errorMessage;
+        this.httpStatus = httpStatus;
     }
 
     @Override
     public String toString() {
-        return "DocumentException [code=" + code + ", data=" + data.toString() + "]";
+        return "DocumentException [code=" + httpStatus.name() + ", error message=" + errorMessage + "]";
     }
 }
