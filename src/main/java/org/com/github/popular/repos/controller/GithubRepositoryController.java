@@ -42,7 +42,7 @@ public class GithubRepositoryController {
             @RequestParam(value = "created_after", required = false) String createdAfter,
             @RequestParam(value = "top_n", defaultValue = "10", required = true) @Min(1) @Max(100) int topN) {
 
-        log.debug("Received request to fetch popular GitHub repositories for language: {}, created after: {}, topN: {}", programmingLanguage, createdAfter, topN);
+        log.debug("Received request to fetch popular GitHub repositories");
         GithubRepositoryResponse githubRepositoryResponse = new GithubRepositoryResponse();
         githubRepositoryResponse.setRepositories(
                 githubRepositoryService.getPopularGithubRepositories(programmingLanguage, createdAfter, topN)

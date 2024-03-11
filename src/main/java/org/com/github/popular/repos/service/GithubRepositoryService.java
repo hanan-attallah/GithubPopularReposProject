@@ -77,12 +77,13 @@ public class GithubRepositoryService {
      * @return the filter query
      */
     private String buildQuery(String programmingLanguage, String createdAfter) {
-        String query = "created:>";
-        query += (createdAfter != null) ? createdAfter : Constants.DEFAULT_GITHUB_REPO_CREATED_AFTER;
+        StringBuilder query = new StringBuilder();
+        query.append("created:>");
+        query.append((createdAfter != null) ? createdAfter : Constants.DEFAULT_GITHUB_REPO_CREATED_AFTER);
         if (programmingLanguage != null && !programmingLanguage.isEmpty()) {
-            query += "+language:" + programmingLanguage;
+            query.append("+language:" + programmingLanguage);
         }
-        return query;
+        return query.toString();
     }
 }
 
