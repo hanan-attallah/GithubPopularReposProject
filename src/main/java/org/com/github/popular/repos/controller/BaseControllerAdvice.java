@@ -71,6 +71,14 @@ public class BaseControllerAdvice {
         return new ResponseEntity<>(createErrorBody("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(CacheLoader.InvalidCacheLoadException.class)
+    public ResponseEntity<Object> handleCacheException(CacheLoader.InvalidCacheLoadException e) {
+        // Log the exception and return a generic error response or a fallback value
+        logger.error("Cache operation failed: {}", e.getMessage());
+        return new ResponseEntity<>(createErrorBody("Cache error occurred. Fallback response provided.", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
     private Map<String, Object> createErrorBody(String message, HttpStatus status) {
         Map<String, Object> errorAttributes = new LinkedHashMap<>();
         errorAttributes.put("timestamp", LocalDateTime.now());

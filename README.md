@@ -22,6 +22,7 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
    git clone git@github.com:hanan-attallah/GithubPopularReposProject.git
    cd GithubPopularReposProject
 
+
 2. For code linting: checkstyle
    - ./gradlew checkstyleMain
    - ./gradlew checkstyleTest
@@ -42,4 +43,3 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
 - controller unit testing
 - Add GitHub action to check that application is working through health check and unit tests are passing
 - Git hooks - JGit to create pre commit hook, in pre commit: run unit test cases.
-- 

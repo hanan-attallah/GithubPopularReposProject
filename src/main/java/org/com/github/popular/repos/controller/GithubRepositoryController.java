@@ -49,6 +49,6 @@ public class GithubRepositoryController {
         );
         log.debug("Responding with {} repositories.", githubRepositoryResponse.getRepositories().size());
 
-        return ResponseEntity.ok(githubRepositoryResponse);
+        return new ResponseEntity<>(githubRepositoryResponse, HttpStatus.OK);
     }
 }

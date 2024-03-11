@@ -13,12 +13,10 @@ import org.springframework.web.client.RestTemplate;
 import org.com.github.popular.repos.exception.GitHubApiException;
 import org.com.github.popular.repos.service.entity.GeneralGithubAPIServiceEntity;
 import org.com.github.popular.repos.service.entity.GithubRepositoryServiceEntity;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
