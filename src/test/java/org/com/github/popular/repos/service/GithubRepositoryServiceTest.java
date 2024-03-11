@@ -1,11 +1,6 @@
 package org.com.github.popular.repos.service;
 
-import org.com.github.popular.repos.exception.GitHubApiException;
-import org.com.github.popular.repos.model.GithubRepository;
-import org.com.github.popular.repos.service.entity.GeneralGithubAPIServiceEntity;
-import org.com.github.popular.repos.service.entity.GithubRepositoryServiceEntity;
 import org.com.github.popular.repos.service.entity.ServiceEntity;
-import org.com.github.popular.repos.service.entity.mapper.EntityToServiceEntityMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,25 +10,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.com.github.popular.repos.exception.GitHubApiException;
+import org.com.github.popular.repos.service.entity.GeneralGithubAPIServiceEntity;
+import org.com.github.popular.repos.service.entity.GithubRepositoryServiceEntity;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests for GithubRepositoryService to fetch popular repositories based on given criteria.
+ */
 @ExtendWith(MockitoExtension.class)
 public class GithubRepositoryServiceTest {
-
-    @Mock
-    private EntityToServiceEntityMapper entityToServiceEntityMapper;
 
     @Mock
     private RestTemplate restTemplate;
@@ -42,51 +38,79 @@ public class GithubRepositoryServiceTest {
     private GithubRepositoryService githubRepositoryService;
 
     /**
-     *  This test case checks whether the method works correctly when the API call is successful.
-     *  It mocks the required dependencies and ensures that the expected service entity is returned.
+     * Test to ensure that the service correctly processes and returns a list of gitHub repositories
+     * when the GitHub API call is successful. It checks the size and properties of the returned list.
      */
-    /*@Test
-    void getPopularRepositoriesSuccess() {
+    @Test
+    void getPopularRepositoriesWhenApiCallSuccess() {
         String programmingLanguage = "Java";
-        String createdAfter = "2020-01-01";
+        String createdAfter = "2024-01-01";
         int topN = 10;
-        GeneralGithubAPIServiceEntity mockResponse = new GeneralGithubAPIServiceEntity();
-        // Populate mockResponse with necessary data
-        mockResponse.setTotalCount(20); // Example value
-        List<GithubRepository> items = IntStream.range(0, topN)
-                .mapToObj(i -> new GithubRepository()) // Assuming GithubRepository can be instantiated like this
-                .collect(Collectors.toList());
-        mockResponse.setItems(items); // Make sure the items list is not empty
 
-        GithubRepositoryServiceEntity mockServiceEntity = mock(GithubRepositoryServiceEntity.class);
+        List<GithubRepositoryServiceEntity> mockItems = IntStream.range(0, topN)
+                .mapToObj(i -> {
+                    GithubRepositoryServiceEntity entity = new GithubRepositoryServiceEntity();
+                    entity.setName("Repository " + i);
+                    entity.setLanguage(programmingLanguage);
+                    entity.setStars(i * 100);
+                    entity.setCreatedAt("2024-01-" + String.format("%02d", i + 1));
+                    return entity;
+                })
+                .collect(Collectors.toList());
+
+        GeneralGithubAPIServiceEntity mockResponse = new GeneralGithubAPIServiceEntity();
+        mockResponse.setTotalCount(100);
+        mockResponse.setItems(mockItems);
 
         when(restTemplate.getForEntity(anyString(), eq(GeneralGithubAPIServiceEntity.class)))
                 .thenReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK));
 
-        when(entityToServiceEntityMapper.mapAsList(eq(GithubRepositoryServiceEntity.class), anyList()))
-                .thenReturn(Collections.singletonList(mockServiceEntity));
-
         List<ServiceEntity> result = githubRepositoryService.getPopularGithubRepositories(programmingLanguage, createdAfter, topN);
 
-        assertEquals(1, result.size());
-    }*/
-
+        assertEquals(topN, result.size());
+        for (int i = 0; i < topN; i++) {
+            GithubRepositoryServiceEntity repo = (GithubRepositoryServiceEntity) result.get(i);
+            assertEquals("Repository " + i, repo.getName());
+            assertEquals(programmingLanguage, repo.getLanguage());
+            assertEquals(i * 100, repo.getStars());
+            assertEquals("2024-01-" + String.format("%02d", i + 1), repo.getCreatedAt());
+        }
+    }
 
     /**
-     *  This test case verifies the behavior when the API call fails with a RestClientException.
-     *  It ensures that the method throws a GitHubApiException as expected.
+     * Test to verify the service throws a GitHubApiException when the API call fails due to a RestClientException.
      */
     @Test
     void getPopularRepositoriesWhenApiCallFails() {
-        // Setup
         String programmingLanguage = "Java";
         String createdAfter = "2020-01-01";
-        int topN = 10;
+        int topN = 50;
 
         when(restTemplate.getForEntity(anyString(), eq(GeneralGithubAPIServiceEntity.class)))
                 .thenThrow(new RestClientException("Service Unavailable"));
 
-        // Act & Assert
-        assertThrows(GitHubApiException.class, () -> githubRepositoryService.getPopularGithubRepositories(programmingLanguage, createdAfter, topN));
+        assertThrows(GitHubApiException.class, () ->
+                githubRepositoryService.getPopularGithubRepositories(programmingLanguage, createdAfter, topN));
+    }
+
+    /**
+     * Test to verify the service handles an empty API response correctly by returning an empty list of repositories.
+     */
+    @Test
+    void getPopularRepositoriesWithEmptyApiResponse() {
+        String programmingLanguage = "Java";
+        String createdAfter = "2020-01-01";
+        int topN = 5;
+
+        GeneralGithubAPIServiceEntity mockResponse = new GeneralGithubAPIServiceEntity();
+        mockResponse.setTotalCount(0); // Simulating an API response with no repositories
+        mockResponse.setItems(Collections.emptyList());
+
+        when(restTemplate.getForEntity(anyString(), eq(GeneralGithubAPIServiceEntity.class)))
+                .thenReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK));
+
+        List<ServiceEntity> result = githubRepositoryService.getPopularGithubRepositories(programmingLanguage, createdAfter, topN);
+
+        assertTrue(result.isEmpty(), "Expected an empty list of repositories for an empty API response");
     }
 }
