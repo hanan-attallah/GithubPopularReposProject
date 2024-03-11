@@ -4,7 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-    INTERNAL_SERVER_ERROR(500);
+    INTERNAL_SERVER_ERROR(500),
+    BAD_GATEWAY(502),
+    SERVICE_UNAVAILABLE(503),
+    BAD_REQUEST(400);
 
     private int code;
 

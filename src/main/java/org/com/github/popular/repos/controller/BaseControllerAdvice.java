@@ -1,5 +1,6 @@
 package org.com.github.popular.repos.controller;
 
+import com.google.common.cache.CacheLoader;
 import org.com.github.popular.repos.exception.GitHubApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class BaseControllerAdvice {
     @ExceptionHandler(GitHubApiException.class)
     public ResponseEntity<Object> handleGitHubApiException(GitHubApiException ex) {
         logger.error("GitHub API exception occurred", ex);
-        return new ResponseEntity<>(createErrorBody(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(createErrorBody(ex.getMessage(), ex.getHttpStatus()), ex.getHttpStatus());
     }
 
     @ExceptionHandler(Exception.class)
@@ -27,6 +28,14 @@ public class BaseControllerAdvice {
         logger.error("Unexpected error occurred", ex);
         return new ResponseEntity<>(createErrorBody("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(CacheLoader.InvalidCacheLoadException.class)
+    public ResponseEntity<Object> handleCacheException(CacheLoader.InvalidCacheLoadException e) {
+        // Log the exception and return a generic error response or a fallback value
+        logger.error("Cache operation failed: {}", e.getMessage());
+        return new ResponseEntity<>(createErrorBody("Cache error occurred. Fallback response provided.", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
     private Map<String, Object> createErrorBody(String message, HttpStatus status) {
         Map<String, Object> errorAttributes = new LinkedHashMap<>();
@@ -37,3 +46,4 @@ public class BaseControllerAdvice {
         return errorAttributes;
     }
 }
+
