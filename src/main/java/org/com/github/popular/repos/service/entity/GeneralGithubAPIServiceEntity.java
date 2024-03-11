@@ -8,7 +8,6 @@ import java.util.List;
 public class GeneralGithubAPIServiceEntity {
     private int totalCount; // API total-count result
     private boolean incompleteResults;
-    private List<GithubRepositoryServiceEntity> items;
-
+    private List<GithubRepositoryServiceEntity> items; // GithubRepository is another class you've defined to capture repository details
 }
 

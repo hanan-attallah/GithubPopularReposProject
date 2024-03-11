@@ -1,6 +1,5 @@
 package org.com.github.popular.repos.controller;
 
-
 import org.com.github.popular.repos.controller.dto.GithubRepositoryResponse;
 import org.com.github.popular.repos.service.GithubRepositoryService;
 import org.com.github.popular.repos.service.entity.GithubRepositoryServiceEntity;
