@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Navigate to the project root directory. Adjust this path as necessary.
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+cd "$PROJECT_ROOT"
+
+# Run Checkstyle
+echo "Running Checkstyle..."
+./gradlew checkstyleMain checkstyleTest
+
+# Check if Checkstyle passed
+CHECKSTYLE_STATUS=$?
+if [ "$CHECKSTYLE_STATUS" -ne 0 ]; then
+  echo "Checkstyle violations found, aborting commit."
+  exit 1
+fi
+
+# Run the Gradle build
+echo "Running Gradle build..."
+./gradlew build
+
+# Check if the build was successful
+BUILD_STATUS=$?
+if [ "$BUILD_STATUS" -ne 0 ]; then
+  echo "Gradle build failed, aborting commit."
+  exit 1
+fi
+
+
+# Run the Gradle test
+echo "Running Gradle test..."
+./gradlew test
+
+# Check if the test was successful
+TEST_STATUS=$?
+if [ "$TEST_STATUS" -ne 0 ]; then
+  echo "Gradle test failed, aborting commit."
+  exit 1
+fi
+
+echo "Pre-commit checks passed."

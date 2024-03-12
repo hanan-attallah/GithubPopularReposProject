@@ -35,10 +35,26 @@ This project aims to facilitate the discovery of popular GitHub repositories. It
 
 ### API Documentation 
 - To access your generated API documentation and UI:
-  OpenAPI JSON using api: http://localhost:8080/v3/api-docs.
+  OpenAPI JSON using: http://localhost:8080/v3/api-docs.
+
+### Git pre-commit
+- Add GitHub action to check that application is working through health check and unit tests are passing
+- Git hooks: create pre commit hook, in pre-commit: run unit test cases.
+  #### Setting Up Git Pre-commit Hook
+         To set up the pre-commit hook in your local repository, follow these steps:
+         1. Make the script executable:
+         ```bash
+         chmod +x git-hooks/pre-commit
+         ln -s -f ../../git-hooks/pre-commit .git/hooks/pre-commit
 
 ### Testing
 - service unit testing 
 - controller unit testing
-- Add GitHub action to check that application is working through health check and unit tests are passing
-- Git hooks - JGit to create pre commit hook, in pre commit: run unit test cases.
+- Performance Test: https://k6.io/docs/examples/single-request/
+  1. Ensure Your Application Is Running:
+  2. run ```./gradlew runSingleRequest
+      > Task :runSingleRequest
+      Total: 0.268428s
+
+
+

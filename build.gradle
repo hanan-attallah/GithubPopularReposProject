@@ -47,3 +47,7 @@ tasks.withType(Checkstyle) {
         html.enabled true
     }
 }
+
+task runSingleRequest(type: Exec) {
+    commandLine 'curl', '-o', '/dev/null', '-s', '-w', 'Total: %{time_total}s\n', 'http://localhost:8080/repositories'
+}
